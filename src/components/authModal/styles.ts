@@ -1,13 +1,20 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+  max-height: 80vh;
   width: 400px;
   background-color: #fff;
   border-radius: 4px;
+  overflow-y: auto;
+
+  @media(max-width: 767px) {
+    width: 95%;
+  }
 `;
 
 export const Main = styled.main`
   padding: 32px;
+  
 
   > h1 {
     font-size: 1.5rem;
@@ -20,6 +27,7 @@ export const Main = styled.main`
 export const Footer = styled.footer`
   border-top: 1px solid #ededed;
   text-align: center;
+  padding: 8px;
 
   > span {
     display: block;

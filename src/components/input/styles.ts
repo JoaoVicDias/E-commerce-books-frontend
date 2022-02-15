@@ -20,6 +20,12 @@ export const Container = styled.div`
     color: #ff261b;
     margin-top:5px;
   }
+
+  .img-button {
+    margin: 0 auto;
+    margin-top: 8px; 
+    width: 100%;
+  }
 `;
 
 export const InputStyle = styled.input<IInput>`
@@ -41,5 +47,12 @@ export const InputStyle = styled.input<IInput>`
         opacity:0.5;
     }
 `;
+
+export const ImgInput = styled.img`
+    width: 40%;
+    height: 40%;
+    border-radius: 50%;
+    margin: 0 auto;
+`
 
 export const Textarea = styled.textarea``;

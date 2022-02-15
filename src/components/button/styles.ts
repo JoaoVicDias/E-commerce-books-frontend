@@ -13,6 +13,7 @@ export const Container = styled.button<IContainer>`
   border: 1px solid transparent;
   transition: all 200ms ease-in-out;
   position: relative;
+  padding: 0 16px;
 
   :hover {
     opacity: 0.8;

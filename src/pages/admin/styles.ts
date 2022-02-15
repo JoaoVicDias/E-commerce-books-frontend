@@ -15,6 +15,10 @@ export const AdminForm = styled.div`
   border-radius: 4px;
   box-shadow: 5px 5px 10px 1px rgba(0, 0, 0, 0.7);
 
+  @media(max-width: 767px) {
+    width: 95%;
+  }
+
   > h4 {
     font-size: 1.5rem;
     color: #4a4a4a;

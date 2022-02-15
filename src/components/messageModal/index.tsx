@@ -1,24 +1,26 @@
 import React from 'react'
 import { BiErrorCircle } from 'react-icons/bi'
+import { GiConfirmed } from 'react-icons/gi'
 
 import Modal from '../modal'
 import Button from '../button'
 
 import { Container, Content, Footer } from './styles'
 
-interface IErrorMessageModalProps {
+interface IMessageModalProps {
+    type: "error" | "success";
     onClose: () => void;
     isOpen: boolean;
     message: string;
 }
 
-const ErrorMessageModal: React.FC<IErrorMessageModalProps> = ({ isOpen, onClose, message }) => {
+const MessageModal: React.FC<IMessageModalProps> = ({ isOpen, onClose, message, type }) => {
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <Container>
                 <Content>
-                    <BiErrorCircle />
+                    {type === "error" ? <BiErrorCircle className="svg-error" /> : <GiConfirmed className="svg-success" />}
                     <p> {message} </p>
                 </Content>
                 <Footer>
@@ -29,4 +31,4 @@ const ErrorMessageModal: React.FC<IErrorMessageModalProps> = ({ isOpen, onClose,
     )
 }
 
-export default ErrorMessageModal
+export default MessageModal

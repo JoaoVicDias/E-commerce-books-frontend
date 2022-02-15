@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 
 import FormDefault from '../../components/formDefault'
-import ErrorMessageModal from '../../components/errorMessageModal'
+import MessageModal from '../../components/messageModal'
 
 import { useForm } from '../../hooks/formReduce'
 import { maskCpf, takeOffMaskCpf } from '../../utils/inputMasks'
@@ -19,9 +19,20 @@ const Admin: React.FC = () => {
 
     const [triedSubmit, setTriedSubmit] = useState<boolean>(false)
     const [errorModal, setErrorModal] = useState<ErrorModalState>({ errorMessage: "", isOpen: false })
+    const [successModal, setSuccessModal] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
 
     const { formState, onChangeInputHandler, formStateList, formStateIsValid } = useForm({
+        img: {
+            type: "file",
+            bodyValue: null,
+            value: null,
+            isValid: false,
+            name: "img",
+            validationRules: {
+                required: true
+            }
+        },
         name: {
             type: "text",
             bodyValue: "",
@@ -94,24 +105,35 @@ const Admin: React.FC = () => {
 
     const onCloseErrorModal = useCallback(() => setErrorModal(prevState => ({ ...prevState, isOpen: false })), []);
 
-    const onSubmitHandler = async (event: React.FormEvent) => {
+    const onCloseSuccessModal = useCallback(() => setSuccessModal(false), [])
+
+    const afterCreatedAccountRedirectHandler = useCallback(() => {
+        onCloseSuccessModal()
+    }, [onCloseSuccessModal])
+
+    const onSubmitHandler = useCallback(async (event: React.FormEvent) => {
         event.preventDefault();
         setTriedSubmit(true)
         if (!formStateIsValid) return
 
         try {
             setLoading(true)
-            const dataToSend = {
-                name: formState.formInputs.name.value,
-                cpf: formState.formInputs.cpf.value,
-                email: formState.formInputs.email.value,
-                password: formState.formInputs.password.value,
-                secretKey: formState.formInputs.secretKey.value,
-            }
 
-            await api.post("/user/sign-up", dataToSend)
+            const formData = new FormData();
+            const isAdmin: boolean | any = false;
+
+            formData.append("name", formState.formInputs.name.bodyValue)
+            formData.append("cpf", formState.formInputs.cpf.bodyValue)
+            formData.append("email", formState.formInputs.email.bodyValue)
+            formData.append("password", formState.formInputs.password.bodyValue)
+            formData.append("secretKey", formState.formInputs.secretKey.bodyValue)
+            formData.append("image", formState.formInputs.img.bodyValue)
+            formData.append("isAdmin", isAdmin)
+
+            await api.post("/user/sign-up", formData)
 
             setLoading(false)
+            setSuccessModal(true)
         } catch (error: any) {
             setLoading(false)
             console.log(error)
@@ -120,25 +142,26 @@ const Admin: React.FC = () => {
                 isOpen: true
             })
         }
-    }
-
-    console.log(formState)
+    }, [formState, formStateIsValid])
 
     return (
-        <Container>
-            <ErrorMessageModal isOpen={errorModal.isOpen} message={errorModal.errorMessage} onClose={onCloseErrorModal} />
-            <AdminForm>
-                <h4> Bem-vindo a área secreta, espero que você possa entrar aqui! </h4>
-                <FormDefault
-                    inputsList={formStateList}
-                    onChangeHandler={onChangeInputHandler}
-                    onSubmit={(event: React.FormEvent) => onSubmitHandler(event)}
-                    showErrorMessage={!formStateIsValid && triedSubmit}
-                    contentButton="Enviar"
-                    loading={loading}
-                />
-            </AdminForm>
-        </Container>
+        <>
+            <MessageModal type="error" isOpen={errorModal.isOpen} message={errorModal.errorMessage} onClose={onCloseErrorModal} />
+            <MessageModal type="success" isOpen={successModal} message="Conta criada com sucesso!" onClose={afterCreatedAccountRedirectHandler} />
+            <Container>
+                <AdminForm>
+                    <h4> Bem-vindo a área secreta, espero que você possa entrar aqui! </h4>
+                    <FormDefault
+                        inputsList={formStateList}
+                        onChangeHandler={onChangeInputHandler}
+                        onSubmit={(event: React.FormEvent) => onSubmitHandler(event)}
+                        showErrorMessage={!formStateIsValid && triedSubmit}
+                        contentButton="Criar conta"
+                        loading={loading}
+                    />
+                </AdminForm>
+            </Container>
+        </>
     )
 }
 

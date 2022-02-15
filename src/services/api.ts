@@ -1,16 +1,22 @@
 import axios from "axios";
 
+const baseUrl = "https://e-commerce-books.herokuapp.com"
+// const baseUrl = "http://localhost:5000"
+
 export default axios.create({
-  baseURL: "https://e-commerce-books.herokuapp.com",
+  baseURL: baseUrl,
+  headers: {
+    "Content-Type":"application/json"
+  },
   transformRequest: [
-    (headers, data) => {
+    (data, headers:any) => {
       const token = localStorage.getItem("userToken");
 
       if (token) {
-        headers.authorization = token;
+        headers.common.Authorization = token;
       }
 
-      return data;
+      return JSON.stringify(data);
     },
   ],
 });

@@ -17,7 +17,7 @@ interface IFormDefaultProps {
     }[]
     onSubmit: (event: React.FormEvent) => void;
     contentButton?: string;
-    onChangeHandler: (value: string, name: string) => void;
+    onChangeHandler: (value: any, name: string) => void;
     showErrorMessage: boolean;
     loading: boolean;
 }

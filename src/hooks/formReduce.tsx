@@ -14,7 +14,11 @@ const onValidationFormHandler = (validationRules: any, value: string) => {
     }
 
     if (validationRules.required) {
-        isValid = value.trim() !== "" && isValid
+        if (typeof value === 'string') {
+            isValid = value?.trim() !== "" && isValid
+        } else {
+            isValid = value !== null && isValid
+        }
     }
 
     if (validationRules.minLength) {
@@ -64,7 +68,7 @@ export const useForm = (formInputs: any) => {
 
     const [formState, dispatch] = useReducer(reducer, { formInputs })
 
-    const onChangeInputHandler = useCallback((value: string, name: string) => {
+    const onChangeInputHandler = useCallback((value: any, name: string) => {
         dispatch({ type: 'CHANGE_HANDLER', value, name })
     }, [])
 

@@ -11,13 +11,20 @@ export const Content = styled.main`
 
   > svg {
       font-size:3rem;
-      color: #ff261b;
       margin-bottom: 12px;
   }
 
   > p {
     font-size: 1rem;
     color: #4a4a4a;
+  }
+
+  .svg-error {
+    color: #ff261b;
+  }
+
+  .svg-success {
+    color: #4BB543;
   }
 `;
 
