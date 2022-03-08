@@ -1,13 +1,15 @@
 import React, { useMemo } from 'react'
 import { Navigate } from 'react-router-dom'
 
+import useUser from '../../hooks/userContext'
+
 interface IPrivateRouteProps {
     element: any;
     shouldBeLogged?: boolean;
 }
 
 const PrivateRoute: React.FC<IPrivateRouteProps> = ({ element, shouldBeLogged }) => {
-    const isLogged = true
+    const { isLogged } = useUser()
 
     const routeTreated = useMemo(() => {
 

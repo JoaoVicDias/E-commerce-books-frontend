@@ -1,10 +1,12 @@
 import React, { useCallback, useState } from 'react'
+import jwtDecode from 'jwt-decode'
 
 import Modal from '../modal'
 import FormDefault from '../formDefault'
 import MessageModal from '../messageModal'
 
 import { useForm } from '../../hooks/formReduce'
+import useUser from '../../hooks/userContext'
 
 import { maskCpf, takeOffMaskCpf } from '../../utils/inputMasks'
 
@@ -28,6 +30,8 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<IErrorState>({ isOpen: false, message: "" })
     const [success, setSuccess] = useState<boolean>(false)
+
+    const { setIsLogged, setUserInfo } = useUser()
 
     const { formState, onChangeInputHandler, formStateList, onSetInputsHandler, formStateIsValid } = useForm({
         email: {
@@ -142,7 +146,12 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
                 password: formState.formInputs.password.bodyValue
             }
 
-            await api.post("/user/sign-in", formData)
+            const res = await api.post("/user/sign-in", formData)
+            
+            setIsLogged(true)
+            setUserInfo(jwtDecode(res.data))
+            localStorage.setItem("e-commerce-books-user-token", res.data)
+            
 
             setLoading(false)
             setSuccess(true)
@@ -154,7 +163,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
                 message: error.response.data.message || "Algo de errado aconteceu, por favor tente novamente!"
             })
         }
-    }, [formState.formInputs.email.bodyValue, formState.formInputs.password.bodyValue])
+    }, [formState.formInputs.email.bodyValue, formState.formInputs.password.bodyValue, setIsLogged, setUserInfo])
 
     const onSubmitSignUpHandler = useCallback(async () => {
         try {
