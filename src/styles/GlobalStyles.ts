@@ -19,6 +19,7 @@ export default createGlobalStyle`
     a {
         text-decoration: none;
         cursor: pointer;
+        color: inherit;
     }
 
     button {
@@ -82,5 +83,18 @@ export default createGlobalStyle`
         transition: all 200ms;
     }
 
-    
+    /* .ease-transition-enter {
+        max-height: 0px;
+    }
+    .ease-transition-enter-active {
+        max-height: auto;
+        transition: all 200ms ease-in-out;
+    }
+    .ease-transition-exit {
+        max-height: auto;
+    }
+    .ease-transition-exit-active {
+        max-height: 0;
+        transition: all 200ms ease-in-out;
+    } */
 `;

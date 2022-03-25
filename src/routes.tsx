@@ -1,10 +1,11 @@
 import React from 'react'
-import { Routes as Switch, Route } from 'react-router-dom'
+import { Routes as Switch, Route, Navigate } from 'react-router-dom'
 
 import PrivateRoute from './components/privateRoute'
 import Layout from './components/layout'
 import Home from './pages/home'
 import Admin from './pages/admin'
+import MyCategories from './pages/my-categories'
 
 const Routes: React.FC = () => {
 
@@ -12,8 +13,12 @@ const Routes: React.FC = () => {
         <Switch>
             <Route element={<Layout />}>
                 <Route path='/' element={<Home />} />
+                <Route path='/my-categories' element={<PrivateRoute shouldBeLogged shouldBeAdmin element={<MyCategories />} />} />
             </Route>
+            
             <Route path='/secret/admin' element={<PrivateRoute shouldBeLogged={false} element={<Admin />} />} />
+           
+            <Route path='*' element={<Navigate replace to='/' />} />
         </Switch>
     )
 }

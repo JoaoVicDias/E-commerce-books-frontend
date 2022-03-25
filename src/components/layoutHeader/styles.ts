@@ -7,6 +7,7 @@ export const Container = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid #363636;
 
   .backdrop-mobile {
     top: 60px;
@@ -21,7 +22,7 @@ export const Brand = styled.h4`
 export const Nav = styled.nav`
   display: block;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1023px) {
     display: none;
   }
 `;
@@ -29,7 +30,7 @@ export const Nav = styled.nav`
 export const NavMobile = styled.nav`
   display: none;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1023px) {
     padding: 24px;
     height: 100vh;
     display: block;
@@ -61,7 +62,7 @@ export const HambugerButton = styled.button`
     cursor: pointer;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1023px) {
     display: block;
   }
 `;

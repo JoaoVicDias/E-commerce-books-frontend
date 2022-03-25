@@ -10,6 +10,9 @@ interface ILayoutHeaderNavigationItemsProps {
     href?: string;
     isBlueButton?: boolean;
     image?: React.ReactNode;
+    isToHidden?: boolean;
+    justText?: boolean;
+    redButton?: boolean;
 }
 
 const LayoutHeaderNavigationItems: React.FC<ILayoutHeaderNavigationItemsProps> = ({
@@ -18,9 +21,12 @@ const LayoutHeaderNavigationItems: React.FC<ILayoutHeaderNavigationItemsProps> =
     isBlueButton,
     isNavigationButton,
     onClick,
-    image
-}) => href ? (
-    <Container isBlueButton={isBlueButton} click={!!onClick}>
+    image,
+    isToHidden,
+    justText,
+    redButton
+}) => isToHidden ? null : href ? (
+    <Container className={`${redButton ? 'redButton' : ''} ${isBlueButton ? 'isBlueButton' : ''} ${justText ? 'isText' : ''}`} click={!!href || !!onClick}>
         <Link to={href}>
             {label}
             {image}
@@ -28,7 +34,7 @@ const LayoutHeaderNavigationItems: React.FC<ILayoutHeaderNavigationItemsProps> =
     </Container>
 )
         : (
-            <Container onClick={onClick} isBlueButton={isBlueButton} click={!!onClick} >
+            <Container className={`${redButton ? 'redButton' : ''} ${isBlueButton ? 'isBlueButton' : ''} ${justText ? 'isText' : ''}`} onClick={onClick} click={!!href || !!onClick} >
                 {label}
                 {image}
             </Container>

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import jwtDecode from 'jwt-decode'
+import axios from 'axios'
 
 import Modal from '../modal'
 import FormDefault from '../formDefault'
@@ -11,7 +11,8 @@ import useUser from '../../hooks/userContext'
 import { maskCpf, takeOffMaskCpf } from '../../utils/inputMasks'
 
 import { Container, Main, Footer } from './styles'
-import api from '../../services/api'
+
+import api, { getApi } from '../../services/api'
 
 interface IAuthModalProps {
     isOpen: boolean;
@@ -31,7 +32,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
     const [error, setError] = useState<IErrorState>({ isOpen: false, message: "" })
     const [success, setSuccess] = useState<boolean>(false)
 
-    const { setIsLogged, setUserInfo } = useUser()
+    const { onSignInHandler } = useUser()
 
     const { formState, onChangeInputHandler, formStateList, onSetInputsHandler, formStateIsValid } = useForm({
         email: {
@@ -112,6 +113,38 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
 
     }, [formState.formInputs, onSetInputsHandler])
 
+    const onClearSigninInputsHandler = useCallback(() => {
+        return onSetInputsHandler({
+            email: {
+                type: "email",
+                value: "",
+                bodyValue: "",
+                errorMessage: "E-mail incorreto, por favor digite um e-mail valido!",
+                isValid: false,
+                label: "E-mail",
+                name: "email",
+                placeHolder: "nome@exemplo.com",
+                validationRules: {
+                    isEmail: true,
+                    required: true
+                }
+            },
+            password: {
+                type: "password",
+                value: "",
+                bodyValue: "",
+                errorMessage: "Senha incorreta, por favor digite uma senha valida!",
+                isValid: false,
+                label: "Senha",
+                name: "password",
+                placeHolder: "********",
+                validationRules: {
+                    minLength: 8
+                }
+            }
+        })
+    },[onSetInputsHandler])
+
     const onChangeToSignInInputsHandler = useCallback(() => {
         let newInputs: any = {}
 
@@ -131,6 +164,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
         setTriedSubmit(false)
         onChangeToSignUpInputsHandler()
     }, [onChangeToSignUpInputsHandler])
+    
     const onChangeModalToSignIn = useCallback(() => {
         setIsSignUp(false)
         setTriedSubmit(false)
@@ -148,13 +182,12 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
 
             const res = await api.post("/user/sign-in", formData)
             
-            setIsLogged(true)
-            setUserInfo(jwtDecode(res.data))
-            localStorage.setItem("e-commerce-books-user-token", res.data)
-            
-
             setLoading(false)
             setSuccess(true)
+            onSignInHandler(res.data)
+            onClose()
+            onClearSigninInputsHandler()
+
         } catch (error: any) {
             console.log(error)
             setLoading(false)
@@ -163,7 +196,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
                 message: error.response.data.message || "Algo de errado aconteceu, por favor tente novamente!"
             })
         }
-    }, [formState.formInputs.email.bodyValue, formState.formInputs.password.bodyValue, setIsLogged, setUserInfo])
+    }, [formState.formInputs, onClose, onSignInHandler, onClearSigninInputsHandler])
 
     const onSubmitSignUpHandler = useCallback(async () => {
         try {
@@ -171,16 +204,19 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
 
             const formData = new FormData();
 
-            formData.append("name", formState.formInputs.name.bodyValue)
-            formData.append("cpf", formState.formInputs.cpf.bodyValue)
-            formData.append("email", formState.formInputs.email.bodyValue)
-            formData.append("password", formState.formInputs.password.bodyValue)
-            formData.append("image", formState.formInputs.img.bodyValue)
+            formData.append('name', formState.formInputs.name.bodyValue)
+            formData.append('cpf', formState.formInputs.cpf.bodyValue)
+            formData.append('email', formState.formInputs.email.bodyValue)
+            formData.append('password', formState.formInputs.password.bodyValue)
+            formData.append('image', formState.formInputs.img.bodyValue)
 
-            await api.post("/user/sign-up", formData)
+            const res = await axios.post(getApi("/user/sign-up"), formData, { headers: { 'content-type': 'multipart/form-data' } })
 
+            onSignInHandler(res.data)
+            onClose()
             setLoading(false)
             setSuccess(true)
+            setIsSignUp(false)
 
         } catch (error: any) {
             console.log(error)
@@ -190,7 +226,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
                 message: error.response.data.message || "Algo de errado aconteceu, por favor tente novamente!"
             })
         }
-    }, [formState])
+    }, [formState.formInputs, onClose, onSignInHandler])
 
     const onCloseModalErrorHandler = useCallback(() => setError(prevState => ({ ...prevState, isOpen: false })), [])
 
@@ -206,6 +242,8 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
         } else {
             onSubmitSignInHandler()
         }
+
+        setTriedSubmit(false)
     }, [formStateIsValid, isSignUp, onSubmitSignInHandler, onSubmitSignUpHandler])
 
     return (

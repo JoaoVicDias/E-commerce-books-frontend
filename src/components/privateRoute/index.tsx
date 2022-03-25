@@ -6,16 +6,21 @@ import useUser from '../../hooks/userContext'
 interface IPrivateRouteProps {
     element: any;
     shouldBeLogged?: boolean;
+    shouldBeAdmin?: boolean;
 }
 
-const PrivateRoute: React.FC<IPrivateRouteProps> = ({ element, shouldBeLogged }) => {
-    const { isLogged } = useUser()
+const PrivateRoute: React.FC<IPrivateRouteProps> = ({ element, shouldBeLogged, shouldBeAdmin }) => {
+    const { isLogged, userInfo } = useUser()
 
     const routeTreated = useMemo(() => {
 
         if (shouldBeLogged) {
             if (isLogged) {
-                return element
+                if(shouldBeAdmin || userInfo.isAdmin) {
+                    return element
+                } else {
+                    return <Navigate to='/' replace />
+                }
             } else {
                 return <Navigate to='/' replace />
             }
@@ -27,7 +32,7 @@ const PrivateRoute: React.FC<IPrivateRouteProps> = ({ element, shouldBeLogged })
             }
         }
 
-    }, [element, isLogged, shouldBeLogged])
+    }, [element, isLogged, shouldBeLogged, userInfo, shouldBeAdmin])
 
     return routeTreated
 }

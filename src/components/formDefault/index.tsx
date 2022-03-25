@@ -15,15 +15,26 @@ interface IFormDefaultProps {
         label: string;
         name: string;
     }[]
-    onSubmit: (event: React.FormEvent) => void;
+    onSubmit?: (event: React.FormEvent) => void;
     contentButton?: string;
     onChangeHandler: (value: any, name: string) => void;
     showErrorMessage: boolean;
-    loading: boolean;
+    loading?: boolean;
+    encType?: string;
+    shouldNotUseButton?: boolean;
 }
 
-const FormDefault: React.FC<IFormDefaultProps> = ({ inputsList, onSubmit, loading, contentButton, onChangeHandler, showErrorMessage }) => (
-    <Container onSubmit={onSubmit} >
+const FormDefault: React.FC<IFormDefaultProps> = ({
+    inputsList,
+    encType,
+    onSubmit,
+    loading,
+    contentButton,
+    onChangeHandler,
+    showErrorMessage,
+    shouldNotUseButton
+}) => (
+    <Container onSubmit={onSubmit ? onSubmit : (event) => event.preventDefault()} encType={encType} >
         {
             inputsList.map(input => (
                 <Input
@@ -33,7 +44,7 @@ const FormDefault: React.FC<IFormDefaultProps> = ({ inputsList, onSubmit, loadin
             ))
         }
         {showErrorMessage && <span> Algum campo esta invalido, por favor preeencha todos os campos com informações válidas! </span>}
-        <Button type='submit' loading={loading} > {contentButton || 'Enviar'}  </Button>
+        {!shouldNotUseButton && <Button type='submit' loading={loading} > {contentButton || 'Enviar'}  </Button>}
     </Container>
 )
 

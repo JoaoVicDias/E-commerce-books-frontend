@@ -49,9 +49,8 @@ export const InputStyle = styled.input<IInput>`
 `;
 
 export const ImgInput = styled.img`
-    width: 40%;
-    height: 40%;
-    border-radius: 50%;
+    width: 100%;
+    clip-path: circle();
     margin: 0 auto;
 `
 

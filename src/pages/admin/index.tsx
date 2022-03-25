@@ -1,12 +1,15 @@
 import React, { useCallback, useState } from 'react'
+import axios from 'axios'
 
 import FormDefault from '../../components/formDefault'
 import MessageModal from '../../components/messageModal'
 
 import { useForm } from '../../hooks/formReduce'
+import useUser from '../../hooks/userContext'
+
 import { maskCpf, takeOffMaskCpf } from '../../utils/inputMasks'
 
-import api from '../../services/api'
+import { getApi } from '../../services/api'
 
 import { Container, AdminForm } from './styles'
 
@@ -19,8 +22,9 @@ const Admin: React.FC = () => {
 
     const [triedSubmit, setTriedSubmit] = useState<boolean>(false)
     const [errorModal, setErrorModal] = useState<ErrorModalState>({ errorMessage: "", isOpen: false })
-    const [successModal, setSuccessModal] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
+
+    const { onSignInHandler } = useUser()
 
     const { formState, onChangeInputHandler, formStateList, formStateIsValid } = useForm({
         img: {
@@ -105,12 +109,6 @@ const Admin: React.FC = () => {
 
     const onCloseErrorModal = useCallback(() => setErrorModal(prevState => ({ ...prevState, isOpen: false })), []);
 
-    const onCloseSuccessModal = useCallback(() => setSuccessModal(false), [])
-
-    const afterCreatedAccountRedirectHandler = useCallback(() => {
-        onCloseSuccessModal()
-    }, [onCloseSuccessModal])
-
     const onSubmitHandler = useCallback(async (event: React.FormEvent) => {
         event.preventDefault();
         setTriedSubmit(true)
@@ -119,8 +117,7 @@ const Admin: React.FC = () => {
         try {
             setLoading(true)
 
-            const formData = new FormData();
-            const isAdmin: boolean | any = false;
+            const formData = new FormData()
 
             formData.append("name", formState.formInputs.name.bodyValue)
             formData.append("cpf", formState.formInputs.cpf.bodyValue)
@@ -128,12 +125,12 @@ const Admin: React.FC = () => {
             formData.append("password", formState.formInputs.password.bodyValue)
             formData.append("secretKey", formState.formInputs.secretKey.bodyValue)
             formData.append("image", formState.formInputs.img.bodyValue)
-            formData.append("isAdmin", isAdmin)
+            formData.append("isAdmin", JSON.stringify(true))
 
-            await api.post("/user/sign-up", formData)
+            const res = await axios.post(getApi("/user/sign-up"), formData, { headers: { 'content-type': 'multipart/form-data' } })
 
+            onSignInHandler(res.data)
             setLoading(false)
-            setSuccessModal(true)
         } catch (error: any) {
             setLoading(false)
             console.log(error)
@@ -142,12 +139,11 @@ const Admin: React.FC = () => {
                 isOpen: true
             })
         }
-    }, [formState, formStateIsValid])
+    }, [formState, formStateIsValid, onSignInHandler])
 
     return (
         <>
             <MessageModal type="error" isOpen={errorModal.isOpen} message={errorModal.errorMessage} onClose={onCloseErrorModal} />
-            <MessageModal type="success" isOpen={successModal} message="Conta criada com sucesso!" onClose={afterCreatedAccountRedirectHandler} />
             <Container>
                 <AdminForm>
                     <h4> Bem-vindo a área secreta, espero que você possa entrar aqui! </h4>
@@ -158,6 +154,7 @@ const Admin: React.FC = () => {
                         showErrorMessage={!formStateIsValid && triedSubmit}
                         contentButton="Criar conta"
                         loading={loading}
+                        encType="multipart/form-data"
                     />
                 </AdminForm>
             </Container>

@@ -11,6 +11,10 @@ interface ILayoutHeaderNavigationListProps {
         isNavigationButton?: boolean;
         href?: string;
         isBlueButton?: boolean;
+        image?: React.ReactNode;
+        isToHidden?: boolean;
+        justText?: boolean;
+        redButton?: boolean;
     }[]
 }
 

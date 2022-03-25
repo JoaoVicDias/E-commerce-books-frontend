@@ -16,8 +16,7 @@ interface IUserContext {
     isLogged: boolean;
     userInfo: IUserInfoState;
     onLogoutHandler: () => void;
-    setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
-    setUserInfo: React.Dispatch<React.SetStateAction<IUserInfoState>>;
+    onSignInHandler: (token: string) => void;
 }
 
 const userContext = createContext({} as IUserContext)
@@ -38,6 +37,12 @@ export const UserContextProvider: React.FC = ({ children }) => {
         isAdmin: false,
         name: ""
     })
+
+    const onSignInHandler = useCallback((token: string) => {
+        setIsLogged(true)
+        localStorage.setItem("e-commerce-books-user-token", token)
+        setUserInfo(jwtDecode(token))
+    },[])
 
     const onLogoutHandler = useCallback(() => {
         setIsLogged(false)
@@ -82,24 +87,20 @@ export const UserContextProvider: React.FC = ({ children }) => {
 
     }, [onLogoutHandler, userInfo.exp, isLogged])
 
-    // useEffect(() => {
-    //     onCheckAutoLogin()
-    // }, [onCheckAutoLogin])
+    useEffect(() => {
+        onCheckAutoLogin()
+    }, [onCheckAutoLogin])
 
     useEffect(() => {
         onExpirationTokenHandler()
     }, [onExpirationTokenHandler])
 
-    console.log(isLogged, userInfo)
-
-
     return (
         <userContext.Provider value={{
             isLogged,
-            setIsLogged,
             onLogoutHandler,
             userInfo,
-            setUserInfo
+            onSignInHandler
         }}>
             {children}
         </userContext.Provider>

@@ -62,6 +62,10 @@ const Input: React.FC<IInputProps> = ({
 
     const inputComponentHandler = useMemo(() => {
         switch (type) {
+            case "hidden":
+                return (
+                    <input type="hidden" style={{display: 'none'}} />
+                )
             case "file":
                 return (
                     <>
