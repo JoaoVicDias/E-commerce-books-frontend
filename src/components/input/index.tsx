@@ -14,6 +14,8 @@ interface IInputProps {
     label: string;
     name: string;
     id?: string;
+    isTouched:boolean;
+    onBlur: (name: string) => void;
 }
 
 const Input: React.FC<IInputProps> = ({
@@ -26,17 +28,14 @@ const Input: React.FC<IInputProps> = ({
     value,
     placeHolder,
     id,
+    isTouched,
+    onBlur
 }) => {
 
-    const [isTouched, setIsTouched] = useState<boolean>(false)
     const [file, setFile] = useState<any>('')
     const [previewUrl, setPreviewUrl] = useState<any>('')
 
     const inputImageRef = useRef<any>();
-
-    const onBlurInputHandler = useCallback(() => {
-        return setIsTouched(true)
-    }, [])
 
     const onClickImageButton = useCallback(() => {
         inputImageRef.current?.click()
@@ -102,12 +101,12 @@ const Input: React.FC<IInputProps> = ({
                     name={name}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => onChange(event.target.value, event.target.name)}
                     placeholder={placeHolder}
-                    onBlur={onBlurInputHandler}
+                    onBlur={() => onBlur(name)}
                     value={value}
                     autoComplete="on"
                 />
         }
-    }, [type, previewUrl, name, id, isTouched, isValid, onClickImageButton, placeHolder, value, onBlurInputHandler, onChangeInputImage, onChange])
+    }, [type, previewUrl, name, id, onClickImageButton, placeHolder, value, isTouched, isValid, onBlur, onChangeInputImage, onChange])
 
     return (
         <Container>

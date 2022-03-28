@@ -6,11 +6,13 @@ export const Container = styled.div`
   grid-template-areas:
     "header"
     "content";
-    grid-template-rows: 60px auto;
+  grid-template-rows: 60px auto;
 `;
 
-
-export const Content = styled.main `
+export const Content = styled.main`
   grid-area: content;
   padding: 30px 24px;
-`
+  @media (max-width: 767px) {
+    padding: 30px 12px;
+  }
+`;

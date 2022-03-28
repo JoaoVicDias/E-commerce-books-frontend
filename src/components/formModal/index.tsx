@@ -21,9 +21,11 @@ interface IFormModalState {
         isValid: boolean;
         label: string;
         name: string;
+        isTouched: boolean;
     }[],
     showErrorMessage: boolean;
     onChangeHandler: (value: any, name: string) => void;
+    onBlurHandler: (name: string) => void;
 }
 
 const FormModal: React.FC<IFormModalState> = ({
@@ -35,7 +37,8 @@ const FormModal: React.FC<IFormModalState> = ({
     submitButtonLabel,
     inputsList,
     showErrorMessage,
-    onChangeHandler
+    onChangeHandler,
+    onBlurHandler
 }) => {
 
     return (
@@ -51,6 +54,7 @@ const FormModal: React.FC<IFormModalState> = ({
                         shouldNotUseButton
                         showErrorMessage={showErrorMessage}
                         onChangeHandler={onChangeHandler}
+                        onBlurHandler={onBlurHandler}
                     />
                 </Content>
                 <Footer>

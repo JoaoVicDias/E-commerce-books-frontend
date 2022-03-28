@@ -26,13 +26,14 @@ const Admin: React.FC = () => {
 
     const { onSignInHandler } = useUser()
 
-    const { formState, onChangeInputHandler, formStateList, formStateIsValid } = useForm({
+    const { formState, onChangeInputHandler, formStateList, formStateIsValid, onBlurHandler } = useForm({
         img: {
             type: "file",
             bodyValue: null,
             value: null,
             isValid: false,
             name: "img",
+            isTouched: false,
             validationRules: {
                 required: true
             }
@@ -45,6 +46,7 @@ const Admin: React.FC = () => {
             isValid: false,
             label: "Nome",
             name: "name",
+            isTouched: false,
             placeHolder: "Joãozinho da Silva",
             validationRules: {
                 required: true
@@ -60,6 +62,7 @@ const Admin: React.FC = () => {
             isValid: false,
             label: "CPF",
             name: "cpf",
+            isTouched: false,
             placeHolder: "000.000.000-00",
             validationRules: {
                 isCpf: true
@@ -73,6 +76,7 @@ const Admin: React.FC = () => {
             isValid: false,
             label: "E-mail",
             name: "email",
+            isTouched: false,
             placeHolder: "nome@exemplo.com",
             validationRules: {
                 isEmail: true,
@@ -85,6 +89,7 @@ const Admin: React.FC = () => {
             value: "",
             errorMessage: "Palavra mágica incorreta, por favor digite algo valido!",
             isValid: false,
+            isTouched: false,
             label: "Palavra mágica",
             name: "secretKey",
             placeHolder: "********",
@@ -99,6 +104,7 @@ const Admin: React.FC = () => {
             errorMessage: "Senha incorreta, por favor digite uma senha valida!",
             isValid: false,
             label: "Senha",
+            isTouched: false,
             name: "password",
             placeHolder: "********",
             validationRules: {
@@ -148,6 +154,7 @@ const Admin: React.FC = () => {
                 <AdminForm>
                     <h4> Bem-vindo a área secreta, espero que você possa entrar aqui! </h4>
                     <FormDefault
+                        onBlurHandler={onBlurHandler}
                         inputsList={formStateList}
                         onChangeHandler={onChangeInputHandler}
                         onSubmit={(event: React.FormEvent) => onSubmitHandler(event)}

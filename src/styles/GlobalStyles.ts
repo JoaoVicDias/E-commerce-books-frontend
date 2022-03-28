@@ -61,7 +61,7 @@ export default createGlobalStyle`
     .modal-transition-exit-active {
         opacity: 0;
         transform: translateY(-100px);
-        transition: all 200ms;
+        transition: all 50ms;
     }
 
     .mobile-navigation-transition-enter {
@@ -82,19 +82,4 @@ export default createGlobalStyle`
         transform: translateX(100%);
         transition: all 200ms;
     }
-
-    /* .ease-transition-enter {
-        max-height: 0px;
-    }
-    .ease-transition-enter-active {
-        max-height: auto;
-        transition: all 200ms ease-in-out;
-    }
-    .ease-transition-exit {
-        max-height: auto;
-    }
-    .ease-transition-exit-active {
-        max-height: 0;
-        transition: all 200ms ease-in-out;
-    } */
 `;

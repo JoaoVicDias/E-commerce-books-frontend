@@ -14,6 +14,7 @@ interface IFormDefaultProps {
         isValid: boolean;
         label: string;
         name: string;
+        isTouched: boolean;
     }[]
     onSubmit?: (event: React.FormEvent) => void;
     contentButton?: string;
@@ -22,6 +23,7 @@ interface IFormDefaultProps {
     loading?: boolean;
     encType?: string;
     shouldNotUseButton?: boolean;
+    onBlurHandler: (name: string) => void;
 }
 
 const FormDefault: React.FC<IFormDefaultProps> = ({
@@ -32,7 +34,8 @@ const FormDefault: React.FC<IFormDefaultProps> = ({
     contentButton,
     onChangeHandler,
     showErrorMessage,
-    shouldNotUseButton
+    shouldNotUseButton,
+    onBlurHandler
 }) => (
     <Container onSubmit={onSubmit ? onSubmit : (event) => event.preventDefault()} encType={encType} >
         {
@@ -40,6 +43,7 @@ const FormDefault: React.FC<IFormDefaultProps> = ({
                 <Input
                     key={input.name}
                     onChange={onChangeHandler}
+                    onBlur={onBlurHandler}
                     {...input} />
             ))
         }

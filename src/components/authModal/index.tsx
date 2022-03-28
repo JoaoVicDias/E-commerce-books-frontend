@@ -34,7 +34,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
 
     const { onSignInHandler } = useUser()
 
-    const { formState, onChangeInputHandler, formStateList, onSetInputsHandler, formStateIsValid } = useForm({
+    const { formState, onChangeInputHandler, formStateList, onSetInputsHandler, formStateIsValid, onBlurHandler } = useForm({
         email: {
             type: "email",
             value: "",
@@ -42,6 +42,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
             errorMessage: "E-mail incorreto, por favor digite um e-mail valido!",
             isValid: false,
             label: "E-mail",
+            isTouched: false,
             name: "email",
             placeHolder: "nome@exemplo.com",
             validationRules: {
@@ -57,6 +58,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
             isValid: false,
             label: "Senha",
             name: "password",
+            isTouched: false,
             placeHolder: "********",
             validationRules: {
                 minLength: 8
@@ -78,6 +80,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
                 label: "Nome",
                 name: "name",
                 placeHolder: "Joãozinho da Silva",
+                isTouched: false,
                 validationRules: {
                     required: true
                 }
@@ -93,6 +96,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
                 label: "CPF",
                 name: "cpf",
                 placeHolder: "000.000.000-00",
+                isTouched: false,
                 validationRules: {
                     isCpf: true
                 }
@@ -101,6 +105,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
                 type: "file",
                 value: null,
                 bodyValue: null,
+                isTouched: false,
                 isValid: false,
                 name: "img",
                 validationRules: {
@@ -123,6 +128,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
                 isValid: false,
                 label: "E-mail",
                 name: "email",
+                isTouched: false,
                 placeHolder: "nome@exemplo.com",
                 validationRules: {
                     isEmail: true,
@@ -137,13 +143,14 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
                 isValid: false,
                 label: "Senha",
                 name: "password",
+                isTouched: false,
                 placeHolder: "********",
                 validationRules: {
                     minLength: 8
                 }
             }
         })
-    },[onSetInputsHandler])
+    }, [onSetInputsHandler])
 
     const onChangeToSignInInputsHandler = useCallback(() => {
         let newInputs: any = {}
@@ -164,7 +171,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
         setTriedSubmit(false)
         onChangeToSignUpInputsHandler()
     }, [onChangeToSignUpInputsHandler])
-    
+
     const onChangeModalToSignIn = useCallback(() => {
         setIsSignUp(false)
         setTriedSubmit(false)
@@ -181,7 +188,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
             }
 
             const res = await api.post("/user/sign-in", formData)
-            
+
             setLoading(false)
             setSuccess(true)
             onSignInHandler(res.data)
@@ -253,6 +260,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
                     <Main>
                         <h1> {isSignUp ? 'Novo aqui ? crie uma conta!' : 'Bem-vindo de volta, faça o login para continuar!'} </h1>
                         <FormDefault
+                            onBlurHandler={onBlurHandler}
                             inputsList={formStateList}
                             onSubmit={(event: React.FormEvent) => onSubmitHandler(event)}
                             onChangeHandler={onChangeInputHandler}

@@ -6,4 +6,5 @@ export const Container = styled.div`
   width: 100vw;
   cursor: pointer;
   background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1;
 `;

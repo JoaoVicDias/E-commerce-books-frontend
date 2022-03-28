@@ -1,18 +1,19 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import qs from 'qs'
-import ReactPaginate from 'react-paginate'
 
 import PageTitle from '../../components/pageTitle'
 import FormModal from '../../components/formModal'
 import MessageModal from '../../components/messageModal'
 import GridItemList from '../../components/gridCategorieslist'
 import Filter from '../../components/filter'
+import Paginate from '../../components/paginate'
 
 import { useForm } from '../../hooks/formReduce'
 
 import api from '../../services/api'
 
 import { Container, Settings, BlueButton } from './styles'
+
 
 interface IDataState {
     id: string;
@@ -25,6 +26,7 @@ interface IModalsState {
     edit: boolean;
     success: boolean;
     error: boolean;
+    filter: boolean;
 }
 
 
@@ -38,15 +40,16 @@ const MyCategories: React.FC = () => {
         create: false,
         edit: false,
         success: false,
-        error: false
+        error: false,
+        filter: false
     })
     const [filter, setFilter] = useState({})
     const [triedSubmit, setTriedSubmit] = useState(false)
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(true)
-    const [filterIsOpen, setFilterisOpen] = useState(false)
     const [pageCount, setPageCount] = useState(0)
     const [offset, setOffset] = useState(0)
+    const [currentPage, setCurrentPage] = useState(0)
 
     const createForm = useForm({
         name: {
@@ -82,6 +85,7 @@ const MyCategories: React.FC = () => {
             label: "Nome",
             name: "name",
             placeHolder: "Economia",
+            isTouched: false,
             validationRules: {
                 required: true
             }
@@ -104,6 +108,11 @@ const MyCategories: React.FC = () => {
         return setModals(prevState => ({ ...prevState, [key]: true }))
     }, [])
 
+    const onResetPaginationHandler = useCallback(() => {
+        setCurrentPage(0)
+        setOffset(0)
+    }, [])
+
     const onClearFormInputsHandle = useCallback(() => {
         let newInputsState = createForm.formState.formInputs;
 
@@ -114,7 +123,8 @@ const MyCategories: React.FC = () => {
                     ...createForm.formState.formInputs[key],
                     bodyValue: '',
                     value: '',
-                    isValid: false
+                    isValid: false,
+                    isTouched: false
                 }
             }
         }
@@ -127,26 +137,31 @@ const MyCategories: React.FC = () => {
         try {
             const res = await api.get(`/category?${qs.stringify(filter)}&offset=${offset}&limit=${itemsPerPage}`)
             setData(res.data.results)
-            setLoading(false)
             setPageCount(Math.ceil(res.data.count / itemsPerPage))
             setTotalData(res.data.count)
+            if (offset === res.data.count || offset > res.data.count) {
+                onResetPaginationHandler()
+            }
+            setLoading(false)
         } catch (error) {
             setLoading(false)
             console.log(error)
         }
-    }, [filter, offset])
+    }, [filter, offset, onResetPaginationHandler])
 
     const onSubmitCreateCategoryHandler = useCallback(async (event: React.FormEvent) => {
         event.preventDefault()
-        setTriedSubmit(true)
-        if (!createForm.formStateIsValid) return
+        if (!createForm.formStateIsValid) {
+            setTriedSubmit(true)
+            return
+        }
 
         try {
             await api.post('/category', { name: createForm.formState.formInputs.name.bodyValue })
 
+            onCloseModalHandler('create')
             onFetchCategoriesHandler()
             onOpenModalHandler('success')
-            onCloseModalHandler('create')
         } catch (error: any) {
             console.log(error)
             onCloseModalHandler('create')
@@ -200,15 +215,8 @@ const MyCategories: React.FC = () => {
         }
     }, [editForm.formState.formInputs.id.bodyValue, editForm.formState.formInputs.name.bodyValue, onCloseModalHandler, onFetchCategoriesHandler, onOpenModalHandler])
 
-    const onCloseFilterHandler = useCallback(() => {
-        return setFilterisOpen(false)
-    }, [])
-
-    const onOpenFilterHandler = useCallback(() => {
-        return setFilterisOpen(true)
-    }, [])
-
     const onNextPageHandler = useCallback((event) => {
+        setCurrentPage(event.selected)
         return setOffset((event.selected * itemsPerPage) % totalData)
     }, [totalData])
 
@@ -240,6 +248,7 @@ const MyCategories: React.FC = () => {
                 inputsList={createForm.formStateList}
                 onChangeHandler={createForm.onChangeInputHandler}
                 showErrorMessage={triedSubmit && !createForm.formStateIsValid}
+                onBlurHandler={createForm.onBlurHandler}
             />
 
             <FormModal
@@ -252,6 +261,7 @@ const MyCategories: React.FC = () => {
                 inputsList={editForm.formStateList}
                 onChangeHandler={editForm.onChangeInputHandler}
                 showErrorMessage={triedSubmit && !editForm.formStateIsValid}
+                onBlurHandler={editForm.onBlurHandler}
             />
 
             <PageTitle> Minhas categorias </PageTitle>
@@ -259,9 +269,9 @@ const MyCategories: React.FC = () => {
                 <BlueButton onClick={() => onOpenModalHandler('create')}> Criar categoria </BlueButton>
                 <Filter
                     filterConfigs={filterConfigs}
-                    isOpen={filterIsOpen}
-                    onClose={onCloseFilterHandler}
-                    onOpen={onOpenFilterHandler}
+                    isOpen={modals.filter}
+                    onClose={() => onCloseModalHandler('filter')}
+                    onOpen={() => onOpenModalHandler('filter')}
                     setFilter={setFilter}
                 />
                 <div></div>
@@ -273,12 +283,11 @@ const MyCategories: React.FC = () => {
                 onDeleteItem={onDeleteCategoryByIdHandler}
                 onEdit={onClickEditButtonHandler}
             />
-            <ReactPaginate
-                nextLabel=">"
-                onPageChange={onNextPageHandler}
+            <Paginate
+                onNextPageHandler={onNextPageHandler}
                 pageRangeDisplayed={5}
                 pageCount={pageCount}
-                previousLabel="<"
+                forcePage={currentPage}
             />
         </Container>
     )

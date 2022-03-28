@@ -18,7 +18,13 @@ interface IFilterProps {
     setFilter: React.Dispatch<React.SetStateAction<{}>>;
 }
 
-const Filter: React.FC<IFilterProps> = ({ filterConfigs, isOpen, onClose, onOpen, setFilter }) => {
+const Filter: React.FC<IFilterProps> = ({ 
+    filterConfigs, 
+    isOpen, 
+    onClose, 
+    onOpen, 
+    setFilter, 
+}) => {
 
     return (
         <Container onMouseOver={onOpen} onMouseOut={onClose}>

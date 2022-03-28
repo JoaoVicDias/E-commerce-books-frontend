@@ -14,6 +14,11 @@ export const Settings = styled.div`
   align-items: center;
   justify-content: space-between;
   position: relative;
+
+  @media(max-width: 767px) {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
 `;
 
 export const BlueButton = styled.button`

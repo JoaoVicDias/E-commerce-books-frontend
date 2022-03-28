@@ -49,7 +49,7 @@ const reducer = (state: any, action: any) => {
                         isValid: onValidationFormHandler(state.formInputs[action.name].validationRules, action.value),
                         bodyValue: state.formInputs[action.name].mask
                             ? state.formInputs[action.name].takeOffMask(action.value)
-                            : action.value
+                            : action.value,
                     }
                 },
             }
@@ -57,6 +57,18 @@ const reducer = (state: any, action: any) => {
             return {
                 ...state,
                 formInputs: action.newStateInputs
+            }
+
+        case "IS_TOUCHED":
+            return {
+                ...state,
+                formInputs: {
+                    ...state.formInputs,
+                    [action.name]: {
+                        ...state.formInputs[action.name],
+                        isTouched: true
+                    }
+                },
             }
 
         default:
@@ -76,6 +88,10 @@ export const useForm = (formInputs: any) => {
         dispatch({ type: 'SET_INPUTS', newStateInputs })
     }, [])
 
+    const onBlurHandler = useCallback((name: string) => {
+        dispatch({ type: 'IS_TOUCHED', name })
+    }, [])
+
     const formStateList = useMemo(() => {
         const keys = Object.keys(formState.formInputs)
 
@@ -91,7 +107,14 @@ export const useForm = (formInputs: any) => {
         return !!!formStateList.find(input => !input.isValid)
     }, [formStateList])
 
-    return { formState, onChangeInputHandler, formStateList, onSetInputsHandler, formStateIsValid }
+    return { 
+        formState, 
+        onChangeInputHandler, 
+        formStateList, 
+        onSetInputsHandler, 
+        formStateIsValid ,
+        onBlurHandler
+    }
 }
 
 

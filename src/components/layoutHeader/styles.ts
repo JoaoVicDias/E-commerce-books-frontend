@@ -39,6 +39,7 @@ export const NavMobile = styled.nav`
     bottom:0;
     right:0;
     background-color: #fff;
+    z-index: 1;
   }
 `;
 
