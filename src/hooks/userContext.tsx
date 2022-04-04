@@ -10,6 +10,7 @@ interface IUserInfoState {
     isAdmin: boolean;
     iat: number;
     exp: number;
+    img: string;
 }
 
 interface IUserContext {
@@ -35,7 +36,8 @@ export const UserContextProvider: React.FC = ({ children }) => {
         exp: 0,
         iat: 0,
         isAdmin: false,
-        name: ""
+        name: "",
+        img: ""
     })
 
     const onSignInHandler = useCallback((token: string) => {
@@ -54,7 +56,8 @@ export const UserContextProvider: React.FC = ({ children }) => {
             exp: 2376,
             iat: 0,
             isAdmin: false,
-            name: ""
+            name: "",
+            img: ""
         })
     }, [])
 

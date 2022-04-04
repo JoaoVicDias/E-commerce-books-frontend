@@ -15,6 +15,7 @@ interface IFormDefaultProps {
         label: string;
         name: string;
         isTouched: boolean;
+        optionsItems?: () => void;
     }[]
     onSubmit?: (event: React.FormEvent) => void;
     contentButton?: string;

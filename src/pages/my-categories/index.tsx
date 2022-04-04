@@ -285,7 +285,7 @@ const MyCategories: React.FC = () => {
             />
             <Paginate
                 onNextPageHandler={onNextPageHandler}
-                pageRangeDisplayed={5}
+                pageRangeDisplayed={itemsPerPage}
                 pageCount={pageCount}
                 forcePage={currentPage}
             />

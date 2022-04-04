@@ -6,6 +6,7 @@ import Layout from './components/layout'
 import Home from './pages/home'
 import Admin from './pages/admin'
 import MyCategories from './pages/my-categories'
+import MyProducts from './pages/my-products'
 
 const Routes: React.FC = () => {
 
@@ -14,6 +15,7 @@ const Routes: React.FC = () => {
             <Route element={<Layout />}>
                 <Route path='/' element={<Home />} />
                 <Route path='/my-categories' element={<PrivateRoute shouldBeLogged shouldBeAdmin element={<MyCategories />} />} />
+                <Route path='/my-products' element={<PrivateRoute shouldBeLogged shouldBeAdmin element={<MyProducts />} />} />
             </Route>
             
             <Route path='/secret/admin' element={<PrivateRoute shouldBeLogged={false} element={<Admin />} />} />

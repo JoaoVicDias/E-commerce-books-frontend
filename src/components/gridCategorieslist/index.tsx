@@ -20,7 +20,7 @@ const GridCategoriesList: React.FC<IGridCategoriesList> = ({ isEmpty, items, loa
         <Container>
             {loading && <Message> Carregando... </Message>}
 
-            {isEmpty && <Message> Nenhum item foi encontrado! </Message>}
+            {!loading && isEmpty && <Message> Nenhum item foi encontrado! </Message>}
 
             {
                 items.map(item => (

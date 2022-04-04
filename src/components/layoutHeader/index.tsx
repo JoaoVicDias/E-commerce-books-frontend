@@ -32,29 +32,29 @@ const LayoutHeader: React.FC<ILayoutHeaderProps> = ({
 
     return (
         <>
-         <Backdrop isOpen={mobileNavigation} onClose={onCloseMobileNavigation} style={{ top: "60px" }} />
-          <Container>
-            <Brand> ECB </Brand>
-            <HambugerButton type="button" onClick={mobileNavigation ? onCloseMobileNavigation : onOpenMobileNavigation}>
-                {
-                    mobileNavigation ? <AiOutlineClose /> : <GiHamburgerMenu />
-                }
-            </HambugerButton>
-            <CSSTransition
-                nodeRef={navigationRef}
-                in={mobileNavigation}
-                timeout={200}
-                classNames="mobile-navigation-transition"
-                unmountOnExit>
-                <NavMobile ref={navigationRef}>
-                    <LayoutHeaderNavigationList items={items} />
-                </NavMobile>
-            </CSSTransition>
+            <Backdrop isOpen={mobileNavigation} onClose={onCloseMobileNavigation} style={{ top: "90px" }} />
+            <Container>
+                <Brand> ECB </Brand>
+                <HambugerButton type="button" onClick={mobileNavigation ? onCloseMobileNavigation : onOpenMobileNavigation}>
+                    {
+                        mobileNavigation ? <AiOutlineClose /> : <GiHamburgerMenu />
+                    }
+                </HambugerButton>
+                <CSSTransition
+                    nodeRef={navigationRef}
+                    in={mobileNavigation}
+                    timeout={200}
+                    classNames="mobile-navigation-transition"
+                    unmountOnExit>
+                    <NavMobile ref={navigationRef}>
+                        <LayoutHeaderNavigationList items={items} />
+                    </NavMobile>
+                </CSSTransition>
 
-            <Nav>
-                <LayoutHeaderNavigationList items={items} />
-            </Nav>
-        </Container>
+                <Nav>
+                    <LayoutHeaderNavigationList items={items} />
+                </Nav>
+            </Container>
         </>
     )
 }

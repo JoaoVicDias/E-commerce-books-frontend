@@ -22,6 +22,7 @@ interface IFormModalState {
         label: string;
         name: string;
         isTouched: boolean;
+        optionsItems?:() => void;
     }[],
     showErrorMessage: boolean;
     onChangeHandler: (value: any, name: string) => void;

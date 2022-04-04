@@ -7,7 +7,11 @@ export const Container = styled.div`
 
   > label {
     color: #fff;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+  }
+
+  .input-range {
+    width: 200px;
   }
 `;
 
@@ -16,6 +20,6 @@ export const Input = styled.input`
   border: 1px solid #dbdbdb;
   border-radius: 4px;
   font-size: 1rem;
-  height: 2.5em;
-  padding: 8px;
+  height: 2em;
+  padding: 6px;
 `;

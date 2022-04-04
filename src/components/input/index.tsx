@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import CurrencyInput from 'react-currency-input-field';
+import AsyncSelect from 'react-select/async';
 
 import Button from '../button'
 
@@ -14,8 +16,11 @@ interface IInputProps {
     label: string;
     name: string;
     id?: string;
-    isTouched:boolean;
+    isTouched: boolean;
     onBlur: (name: string) => void;
+    optionsItems?: () => void;
+    imageUrl?: string;
+    inputValue?: any;
 }
 
 const Input: React.FC<IInputProps> = ({
@@ -29,7 +34,8 @@ const Input: React.FC<IInputProps> = ({
     placeHolder,
     id,
     isTouched,
-    onBlur
+    onBlur,
+    optionsItems,
 }) => {
 
     const [file, setFile] = useState<any>('')
@@ -63,7 +69,7 @@ const Input: React.FC<IInputProps> = ({
         switch (type) {
             case "hidden":
                 return (
-                    <input type="hidden" style={{display: 'none'}} />
+                    <input type="hidden" style={{ display: 'none' }} />
                 )
             case "file":
                 return (
@@ -89,9 +95,41 @@ const Input: React.FC<IInputProps> = ({
                         onChange={(event: React.ChangeEvent<HTMLInputElement> | any) => onChange(event.target.value, event.target.name)}
                         placeholder={placeHolder}
                         value={value}
+                        showError={isTouched && !isValid}
+                        onBlur={() => onBlur(name)}
                     >
 
                     </Textarea>
+                )
+
+            case "price":
+                return (
+                    <CurrencyInput
+                        name={name}
+                        placeholder={placeHolder}
+                        decimalsLimit={2}
+                        onValueChange={(value) => onChange(value, name)}
+                        prefix="R$ "
+                        className='input_price'
+                        onBlur={() => onBlur(name)}
+                        value={value}
+                    />
+                )
+
+            case 'select':
+                return (
+                    <AsyncSelect
+                        cacheOptions
+                        defaultOptions
+                        loadOptions={optionsItems}
+                        className="select_input"
+                        name={name}
+                        placeholder={placeHolder}
+                        onBlur={() => onBlur(name)}
+                        onChange={(event: any) => onChange(event.value, name)}
+                        defaultValue={value}
+                        isSearchable={false}
+                    />
                 )
 
             default:
@@ -106,10 +144,10 @@ const Input: React.FC<IInputProps> = ({
                     autoComplete="on"
                 />
         }
-    }, [type, previewUrl, name, id, onClickImageButton, placeHolder, value, isTouched, isValid, onBlur, onChangeInputImage, onChange])
+    }, [type, previewUrl, name, id, onClickImageButton, placeHolder, value, isTouched, isValid, optionsItems, onChangeInputImage, onChange, onBlur])
 
     return (
-        <Container>
+        <Container showError={isTouched && !isValid}>
             <label> {label} </label>
             {inputComponentHandler}
             {isTouched && !isValid && <span> {errorMessage} </span>}

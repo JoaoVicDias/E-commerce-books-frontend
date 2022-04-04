@@ -9,8 +9,10 @@ import { Container, FilterButton } from './styles'
 interface IFilterProps {
     filterConfigs: {
         label: string;
-        objectKey: string;
+        objectKey: any;
         type: string;
+        min?: number;
+        max?: number;
     }[]
     isOpen: boolean;
     onClose: () => void;
@@ -18,12 +20,12 @@ interface IFilterProps {
     setFilter: React.Dispatch<React.SetStateAction<{}>>;
 }
 
-const Filter: React.FC<IFilterProps> = ({ 
-    filterConfigs, 
-    isOpen, 
-    onClose, 
-    onOpen, 
-    setFilter, 
+const Filter: React.FC<IFilterProps> = ({
+    filterConfigs,
+    isOpen,
+    onClose,
+    onOpen,
+    setFilter,
 }) => {
 
     return (

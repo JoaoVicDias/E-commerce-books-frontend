@@ -7,7 +7,9 @@ import AuthModal from '../authModal'
 
 import useUser from '../../hooks/userContext'
 
-import { Container, Content } from './styles'
+import { getApi } from '../../services/api'
+
+import { Container, Content, ImgCircle } from './styles'
 
 const Layout: React.FC = () => {
 
@@ -22,12 +24,10 @@ const Layout: React.FC = () => {
     const onOpenMobileNavigationHandler = useCallback(() => setMobileNavigation(true), [])
     const onCloseMobileNavigationHandler = useCallback(() => setMobileNavigation(false), [])
 
-
-
     const headerNavigationItems = useMemo(() => [
-        { label: `Olá ${userInfo.name}`, justText: true, isToHidden: !isLogged },
+        { label: `Olá ${userInfo.name}`, justText: true, isToHidden: !isLogged, image: <ImgCircle src={getApi(`/${userInfo.img}`)} alt={userInfo.name} /> },
         { label: 'Carrinho', image: <AiOutlineShoppingCart /> },
-        { label: 'Meus livros', isToHidden: !isLogged || !userInfo.isAdmin },
+        { label: 'Meus livros', isToHidden: !isLogged || !userInfo.isAdmin, href: '/my-products' },
         { label: 'Minhas categorias', isToHidden: !isLogged || !userInfo.isAdmin, href: '/my-categories' },
         { label: 'Meus pedidos', isToHidden: !isLogged },
         { label: 'Log in / Sign up', isBlueButton: true, onClick: onOpenAuthModalHandler, isToHidden: isLogged },

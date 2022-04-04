@@ -10,7 +10,7 @@ export const Container = styled.header`
   border-bottom: 1px solid #363636;
 
   .backdrop-mobile {
-    top: 60px;
+    top: 90px;
   }
 `;
 
@@ -35,7 +35,7 @@ export const NavMobile = styled.nav`
     height: 100vh;
     display: block;
     position: fixed;
-    top:60px;
+    top:90px;
     bottom:0;
     right:0;
     background-color: #fff;
