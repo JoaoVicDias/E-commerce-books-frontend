@@ -7,6 +7,7 @@ import LayoutHeaderNavigationList from '../layoutHeaderNavigationList'
 import Backdrop from '../backdrop'
 
 import { Container, Brand, Nav, NavMobile, HambugerButton } from './styles'
+import { Link } from 'react-router-dom'
 
 interface ILayoutHeaderProps {
     items: {
@@ -34,7 +35,7 @@ const LayoutHeader: React.FC<ILayoutHeaderProps> = ({
         <>
             <Backdrop isOpen={mobileNavigation} onClose={onCloseMobileNavigation} style={{ top: "90px" }} />
             <Container>
-                <Brand> ECB </Brand>
+                <Link to="/"> <Brand> ECB </Brand> </Link>
                 <HambugerButton type="button" onClick={mobileNavigation ? onCloseMobileNavigation : onOpenMobileNavigation}>
                     {
                         mobileNavigation ? <AiOutlineClose /> : <GiHamburgerMenu />
@@ -47,7 +48,7 @@ const LayoutHeader: React.FC<ILayoutHeaderProps> = ({
                     classNames="mobile-navigation-transition"
                     unmountOnExit>
                     <NavMobile ref={navigationRef}>
-                        <LayoutHeaderNavigationList items={items} />
+                        <LayoutHeaderNavigationList items={items} onClose={onCloseMobileNavigation} />
                     </NavMobile>
                 </CSSTransition>
 

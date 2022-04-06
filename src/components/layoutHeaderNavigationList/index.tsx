@@ -16,12 +16,13 @@ interface ILayoutHeaderNavigationListProps {
         justText?: boolean;
         redButton?: boolean;
     }[]
+    onClose?: () => void;
 }
 
-const LayoutHeaderNavigationList: React.FC<ILayoutHeaderNavigationListProps> = ({ items }) => (
+const LayoutHeaderNavigationList: React.FC<ILayoutHeaderNavigationListProps> = ({ items, onClose }) => (
     <Container>
         {items.map(item => (
-            <LayoutHeaderNavigationItems key={item.label} {...item} />
+            <LayoutHeaderNavigationItems key={item.label} onClose={onClose} {...item} />
         ))}
     </Container>
 )
