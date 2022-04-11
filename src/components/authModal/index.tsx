@@ -7,12 +7,14 @@ import MessageModal from '../messageModal'
 
 import { useForm } from '../../hooks/formReduce'
 import useUser from '../../hooks/userContext'
+import useCart from '../../hooks/cartHook'
 
 import { maskCpf, takeOffMaskCpf } from '../../utils/inputMasks'
 
 import { Container, Main, Footer } from './styles'
 
 import api, { getApi } from '../../services/api'
+import jwtDecode from 'jwt-decode'
 
 interface IAuthModalProps {
     isOpen: boolean;
@@ -33,6 +35,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
     const [success, setSuccess] = useState<boolean>(false)
 
     const { onSignInHandler } = useUser()
+    const { onFetchSavedCartStorage } = useCart()
 
     const { formState, onChangeInputHandler, formStateList, onSetInputsHandler, formStateIsValid, onBlurHandler } = useForm({
         email: {
@@ -189,12 +192,14 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
 
             const res = await api.post("/user/sign-in", formData)
 
+            const decodedToken: any = jwtDecode(res.data)
+
             setLoading(false)
             setSuccess(true)
             onSignInHandler(res.data)
             onClose()
             onClearSigninInputsHandler()
-
+            onFetchSavedCartStorage(decodedToken.id)
         } catch (error: any) {
             console.log(error)
             setLoading(false)
@@ -203,7 +208,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
                 message: error.response.data.message || "Algo de errado aconteceu, por favor tente novamente!"
             })
         }
-    }, [formState.formInputs, onClose, onSignInHandler, onClearSigninInputsHandler])
+    }, [formState.formInputs.email.bodyValue, formState.formInputs.password.bodyValue, onSignInHandler, onClose, onClearSigninInputsHandler, onFetchSavedCartStorage])
 
     const onSubmitSignUpHandler = useCallback(async () => {
         try {
@@ -249,7 +254,6 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
         } else {
             onSubmitSignInHandler()
         }
-
         setTriedSubmit(false)
     }, [formStateIsValid, isSignUp, onSubmitSignInHandler, onSubmitSignUpHandler])
 

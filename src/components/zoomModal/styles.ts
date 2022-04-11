@@ -5,20 +5,22 @@ interface IDivImage {
 }
 
 export const Container = styled.div`
-  width: 600px;
-  min-height: 400px;
+  position: relative;
+  width: 700px;
+  height: 400px;
   background-color: #fff;
   border-radius: 4px;
   display: flex;
   flex-direction: column;
-`;
 
-export const CloseButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  padding: 16px;
+  @media (max-width: 767px) {
+    width: 90%;
+  }
 
   > svg {
+    position: absolute;
+    top: 16px;
+    right: 16px;
     cursor: pointer;
     width: 20px;
     height: 20px;
@@ -33,15 +35,15 @@ export const Content = styled.div`
 `;
 
 export const DivImage = styled.div<IDivImage>`
-  background: url(${(props) => props.path}) center/contain no-repeat;
+  background: url(${(props) => props.path}) center/cover no-repeat;
 `;
 
 export const Informations = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 16px;
-  max-height: 650px;
+  padding: 20px;
+  max-height: 400px;
   overflow: auto;
   gap: 10px;
 

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useCallback, useEffect, useRef } from 'react'
 import jwtDecode from 'jwt-decode'
+import useCart from './cartHook';
 
 
 interface IUserInfoState {
@@ -28,6 +29,8 @@ export const UserContextProvider: React.FC = ({ children }) => {
     const userToken = localStorage.getItem("e-commerce-books-user-token")
     const expTimeTimeout = useRef<NodeJS.Timeout | any>()
 
+    const { onClearCartHandler } = useCart()
+
     const [isLogged, setIsLogged] = useState<boolean>(!!userToken)
     const [userInfo, setUserInfo] = useState<IUserInfoState>({
         id: "",
@@ -41,10 +44,11 @@ export const UserContextProvider: React.FC = ({ children }) => {
     })
 
     const onSignInHandler = useCallback((token: string) => {
+        const decodedUser: IUserInfoState = jwtDecode(token)
         setIsLogged(true)
         localStorage.setItem("e-commerce-books-user-token", token)
-        setUserInfo(jwtDecode(token))
-    },[])
+        setUserInfo(decodedUser)
+    }, [])
 
     const onLogoutHandler = useCallback(() => {
         setIsLogged(false)
@@ -59,7 +63,8 @@ export const UserContextProvider: React.FC = ({ children }) => {
             name: "",
             img: ""
         })
-    }, [])
+        onClearCartHandler()
+    }, [onClearCartHandler])
 
     const onCheckAutoLogin = useCallback(() => {
         if (!userToken) return
@@ -68,27 +73,28 @@ export const UserContextProvider: React.FC = ({ children }) => {
         const decodedToken: IUserInfoState = jwtDecode(userToken)
 
         if (todayTime < (decodedToken.exp * 1000)) {
-            setUserInfo(decodedToken)
-            setIsLogged(true)
+            onSignInHandler(userToken)
         } else {
             onLogoutHandler()
         }
 
-    }, [userToken, onLogoutHandler])
+    }, [userToken, onSignInHandler, onLogoutHandler])
 
     const onExpirationTokenHandler = useCallback(() => {
+        if (!userToken) return
 
-        if(!isLogged) return
+        const decodedToken: IUserInfoState = jwtDecode(userToken)
+
         clearTimeout(expTimeTimeout.current)
 
         const todayTime = new Date().getTime()
-        const tokenExpTime = userInfo?.exp * 1000
+        const tokenExpTime = decodedToken.exp * 1000
 
         const expTime = tokenExpTime - todayTime
 
         setTimeout(onLogoutHandler, expTime)
 
-    }, [onLogoutHandler, userInfo.exp, isLogged])
+    }, [onLogoutHandler, userToken])
 
     useEffect(() => {
         onCheckAutoLogin()

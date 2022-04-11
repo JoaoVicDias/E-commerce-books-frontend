@@ -1,13 +1,17 @@
 
+import { CartContextProvider } from './hooks/cartHook';
 import { UserContextProvider } from './hooks/userContext'
+
 import Routes from "./routes";
 
 function App() {
   return (
     <>
-      <UserContextProvider>
-        <Routes />
-      </UserContextProvider>
+      <CartContextProvider>
+        <UserContextProvider>
+          <Routes />
+        </UserContextProvider>
+      </CartContextProvider>
     </>
   )
 }
