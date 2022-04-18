@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const baseUrl = "https://e-commerce-books.herokuapp.com"
-const baseUrl = "http://localhost:5000"
+const baseUrl = "https://e-commerce-books.herokuapp.com"
+// const baseUrl = "http://localhost:5000"
 
 export const getApi = (param: string) => {
   return `${baseUrl}${param}`

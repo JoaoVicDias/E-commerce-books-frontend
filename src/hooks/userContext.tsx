@@ -32,7 +32,7 @@ export const UserContextProvider: React.FC = ({ children }) => {
     const { onClearCartHandler } = useCart()
 
     const [isLogged, setIsLogged] = useState<boolean>(!!userToken)
-    const [userInfo, setUserInfo] = useState<IUserInfoState>({
+    const [userInfo, setUserInfo] = useState<IUserInfoState>(userToken ? jwtDecode(userToken) : {
         id: "",
         cpf: 0,
         email: "",

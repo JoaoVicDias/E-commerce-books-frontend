@@ -229,7 +229,8 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
             setLoading(false)
             setSuccess(true)
             setIsSignUp(false)
-
+            onChangeModalToSignIn()
+            onClearSigninInputsHandler()
         } catch (error: any) {
             console.log(error)
             setLoading(false)
@@ -238,7 +239,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ isOpen, onClose }) => {
                 message: error.response.data.message || "Algo de errado aconteceu, por favor tente novamente!"
             })
         }
-    }, [formState.formInputs, onClose, onSignInHandler])
+    }, [formState.formInputs, onClose, onSignInHandler, onChangeModalToSignIn, onClearSigninInputsHandler])
 
     const onCloseModalErrorHandler = useCallback(() => setError(prevState => ({ ...prevState, isOpen: false })), [])
 

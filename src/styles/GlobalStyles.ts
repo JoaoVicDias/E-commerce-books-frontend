@@ -82,4 +82,21 @@ export default createGlobalStyle`
         transform: translateX(100%);
         transition: all 200ms;
     }
+
+    .animation-height-enter {
+        max-height: 0px;
+        transition: max-height 0.1s;
+    }
+    .animation-height-enter-active {
+        max-height: 99999px;
+        transition: all 8s ease-in-out;
+    }
+    .animation-height-exit {
+        max-height: 99999px;
+        transition: all 8s ease-in-out;
+    }
+    .animation-height-exit-active {
+        max-height: 0px;
+        transition: max-height 0.1s;
+    }
 `;

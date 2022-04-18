@@ -28,11 +28,11 @@ const Layout: React.FC = () => {
     const onCloseModalHandler = useCallback((key: string) => setModals(prevState => ({ ...prevState, [key]: false })), [])
 
     const headerNavigationItems = useMemo(() => [
-        { label: `Olá ${userInfo.name}`, justText: true, isToHidden: !isLogged, image: <ImgCircle src={getApi(`/${userInfo.img}`)} alt={userInfo.name} /> },
+        { label: `Olá ${userInfo.name}`, justText: true, isToHidden: !isLogged, image: userInfo.img && <ImgCircle src={getApi(`/${userInfo.img}`)} alt={userInfo.name} /> },
         { label: 'Carrinho', image: <AiOutlineShoppingCart />, onClick: () => onOpenModalHandler('cart') },
         { label: 'Meus livros', isToHidden: !isLogged || !userInfo.isAdmin, href: '/my-products' },
         { label: 'Minhas categorias', isToHidden: !isLogged || !userInfo.isAdmin, href: '/my-categories' },
-        { label: 'Meus pedidos', isToHidden: !isLogged },
+        { label: 'Meus pedidos', isToHidden: !isLogged, href: '/my-orders' },
         { label: 'Log in / Sign up', isBlueButton: true, onClick: () => onOpenModalHandler('auth'), isToHidden: isLogged },
         { label: 'Sair', isToHidden: !isLogged, redButton: true, onClick: onLogoutHandler }
     ], [isLogged, onLogoutHandler, onOpenModalHandler, userInfo.img, userInfo.isAdmin, userInfo.name])

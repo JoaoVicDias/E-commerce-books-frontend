@@ -13,13 +13,16 @@ const PrivateRoute: React.FC<IPrivateRouteProps> = ({ element, shouldBeLogged, s
     const { isLogged, userInfo } = useUser()
 
     const routeTreated = useMemo(() => {
-
         if (shouldBeLogged) {
             if (isLogged) {
-                if(shouldBeAdmin || userInfo.isAdmin) {
-                    return element
+                if (shouldBeAdmin) {
+                    if (userInfo.isAdmin) {
+                        return element
+                    } else {
+                        return <Navigate to='/' replace />
+                    }
                 } else {
-                    return <Navigate to='/' replace />
+                    return element
                 }
             } else {
                 return <Navigate to='/' replace />

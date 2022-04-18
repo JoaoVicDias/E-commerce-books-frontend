@@ -23,6 +23,7 @@ interface IModalsState {
     edit: boolean;
     edit_success: boolean;
     filter: boolean;
+    categoryError: boolean;
 }
 
 const MyProducts: React.FC = () => {
@@ -36,6 +37,7 @@ const MyProducts: React.FC = () => {
         edit: false,
         edit_success: false,
         filter: false,
+        categoryError: false,
     })
     const [triedSubmit, setTriedSubmit] = useState(false)
     const [loading, setLoading] = useState(true)
@@ -46,7 +48,7 @@ const MyProducts: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(0)
     const [totalData, setTotalData] = useState(0)
 
-    const { onFetchCategorysHandler } = categorysHook()
+    const { onFetchCategorysHandler, categorys } = categorysHook()
 
     const createProduct = useForm({
         img: {
@@ -379,6 +381,12 @@ const MyProducts: React.FC = () => {
     return (
         <>
             <MessageModal
+                isOpen={modals.categoryError}
+                message='Você precisa criar uma categoria primeiro'
+                onClose={() => onCloseModalsHandler('categoryError')}
+                type='error'
+            />
+            <MessageModal
                 isOpen={modals.success}
                 message='Livro cadastrado com sucesso!'
                 onClose={() => onCloseModalsHandler('success')}
@@ -424,7 +432,7 @@ const MyProducts: React.FC = () => {
             />
             <PageTitle> Meus livros </PageTitle>
             <Settings>
-                <BlueButton onClick={() => onOpenModalsHandler('create')}> Cadastrar um livro </BlueButton>
+                <BlueButton onClick={() => onOpenModalsHandler(`${categorys.length === 0 ? 'categoryError' : 'create'}`)}> Cadastrar um livro </BlueButton>
                 <SettingsFilters
                     filterConfigs={filterConfigMemo}
                     isOpen={modals.filter}

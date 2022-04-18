@@ -20,9 +20,15 @@ interface ICartModal {
     onOpenAuthModal: () => void;
 }
 
+interface IModals {
+    error: boolean;
+    success: boolean;
+}
+
 const CartModal: React.FC<ICartModal> = ({ isOpen, onClose, onOpenAuthModal }) => {
 
-    const [success, setSuccess] = useState(false)
+    const [modals, setModals] = useState<IModals>({ error: false, success: false })
+    const [error, setError] = useState('')
 
     const {
         cart,
@@ -39,26 +45,43 @@ const CartModal: React.FC<ICartModal> = ({ isOpen, onClose, onOpenAuthModal }) =
         return cart.reduce((cb, value) => cb += (value.price * value.amount), 0)
     }, [cart])
 
+    const onCloseModalHandler = useCallback((key: string) => {
+        return setModals(prevState => ({ ...prevState, [key]: false }))
+    }, [])
+
+    const onOpenModalHandler = useCallback((key: string) => {
+        return setModals(prevState => ({ ...prevState, [key]: true }))
+    }, [])
+
     const onCreateCheckout = useCallback(async () => {
         try {
             const products = cart.map(item => ({ id: item.id, amount: item.amount }))
 
             await api.post('/checkout', { products })
+
             onClearCartHandler()
             onDeleteCartStorage()
-            onClose()
-            setSuccess(true)
-        } catch (error) {
-
+            onOpenModalHandler('success')
+        } catch (error: any) {
+            setError(error.response.data.message || "Algo deu errado, por favor tente novamente!")
+            onOpenModalHandler('error')
         }
-    }, [cart, onClearCartHandler, onClose, onDeleteCartStorage])
+
+        onClose()
+    }, [cart, onClearCartHandler, onClose, onDeleteCartStorage, onOpenModalHandler])
 
     return (
         <>
             <MessageModal
-                isOpen={success}
+                isOpen={modals.error}
+                message={error}
+                onClose={() => onCloseModalHandler('error')}
+                type='error'
+            />
+            <MessageModal
+                isOpen={modals.success}
                 message="Pedido finalizado com successo, espero que goste!"
-                onClose={() => setSuccess(false)}
+                onClose={() => onCloseModalHandler('success')}
                 type='success'
             />
             <Modal isOpen={isOpen} onClose={onClose} >

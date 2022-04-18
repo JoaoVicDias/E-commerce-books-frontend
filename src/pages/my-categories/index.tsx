@@ -134,6 +134,7 @@ const MyCategories: React.FC = () => {
 
     const onFetchCategoriesHandler = useCallback(async () => {
         setLoading(true)
+        
         try {
             const res = await api.get(`/category?${qs.stringify(filter)}&offset=${offset}&limit=${itemsPerPage}`)
             setData(res.data.results)
@@ -142,12 +143,13 @@ const MyCategories: React.FC = () => {
             if (offset === res.data.count || offset > res.data.count) {
                 onResetPaginationHandler()
             }
-            setLoading(false)
-        } catch (error) {
-            setLoading(false)
-            console.log(error)
+        } catch (error: any) {
+            setError(error.response.data.message || "Algo deu errado, por favor tente novamente!")
+            onOpenModalHandler('error')
         }
-    }, [filter, offset, onResetPaginationHandler])
+
+        setLoading(false)
+    }, [filter, offset, onOpenModalHandler, onResetPaginationHandler])
 
     const onSubmitCreateCategoryHandler = useCallback(async (event: React.FormEvent) => {
         event.preventDefault()
@@ -172,17 +174,6 @@ const MyCategories: React.FC = () => {
         onClearFormInputsHandle()
         setTriedSubmit(false)
     }, [createForm.formState.formInputs.name.bodyValue, createForm.formStateIsValid, onClearFormInputsHandle, onCloseModalHandler, onFetchCategoriesHandler, onOpenModalHandler])
-
-    const onDeleteCategoryByIdHandler = useCallback(async (id: string) => {
-        try {
-            await api.delete(`/category/${id}`)
-            onFetchCategoriesHandler()
-        } catch (error: any) {
-            console.log(error)
-            onOpenModalHandler('error')
-            setError(error.response.data.message || "Algo deu errado, por favor tente novamente!")
-        }
-    }, [onFetchCategoriesHandler, onOpenModalHandler])
 
     const onClickEditButtonHandler = useCallback((data: { id: string, name: string }) => {
         onOpenModalHandler('edit')
@@ -280,7 +271,6 @@ const MyCategories: React.FC = () => {
                 items={data}
                 isEmpty={data.length === 0}
                 loading={loading}
-                onDeleteItem={onDeleteCategoryByIdHandler}
                 onEdit={onClickEditButtonHandler}
             />
             <Paginate

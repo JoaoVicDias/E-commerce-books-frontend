@@ -11,11 +11,10 @@ interface IGridCategoriesList {
     }[];
     isEmpty: boolean;
     loading: boolean;
-    onDeleteItem: (id: string) => void;
     onEdit: (data: { id: string, name: string }) => void;
 }
 
-const GridCategoriesList: React.FC<IGridCategoriesList> = ({ isEmpty, items, loading, onDeleteItem, onEdit }) => {
+const GridCategoriesList: React.FC<IGridCategoriesList> = ({ isEmpty, items, loading, onEdit }) => {
     return (
         <Container>
             {loading && <Message> Carregando... </Message>}
@@ -24,7 +23,7 @@ const GridCategoriesList: React.FC<IGridCategoriesList> = ({ isEmpty, items, loa
 
             {
                 items.map(item => (
-                    <GridCategoriesItem key={item.id} onDeleteItem={onDeleteItem} onEdit={onEdit} {...item} />
+                    <GridCategoriesItem key={item.id} onEdit={onEdit} {...item} />
                 ))
             }
         </Container>

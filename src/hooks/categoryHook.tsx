@@ -1,23 +1,45 @@
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 import api from "../services/api"
 
+interface ICategory {
+    name: string;
+    id: string;
+}
+
 export default function Categorys() {
+
+    const [categorys, setCategorys] = useState<ICategory[]>([])
+
+    const onFetchCategorys = useCallback(async () => {
+        try {
+            const res = await api.get('/category/all')
+            setCategorys(res.data.results)
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
 
     const onFetchCategorysHandler = useCallback(async () => {
         try {
             const res = await api.get('/category/all')
-            return res.data.results.map((category: any) => ({ label: category.name, value: category.id }))
+
+            if(res.data.results.length > 0) {
+                return res.data.results.map((category: any) => ({ label: category?.name, value: category?.id }))
+            } else {
+                return []
+            }
         } catch (error) {
             console.log(error)
         }
     }, [])
 
     useEffect(() => {
-        onFetchCategorysHandler()
-    }, [onFetchCategorysHandler])
+        onFetchCategorys()
+    }, [onFetchCategorys])
 
     return {
-        onFetchCategorysHandler
+        onFetchCategorysHandler,
+        categorys
     }
 }
