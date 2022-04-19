@@ -2,6 +2,11 @@ import styled from "styled-components";
 
 export const Container = styled.div `
     min-height:100%;
+    padding: 30px 100px ;
+
+    @media(max-width: 1023px) {
+        padding: inherit ;
+    }
 `
 
 export const Settings = styled.div `

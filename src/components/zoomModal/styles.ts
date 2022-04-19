@@ -14,7 +14,7 @@ export const Container = styled.div`
   flex-direction: column;
 
   @media (max-width: 767px) {
-    width: 90%;
+    width: 95%;
   }
 
   > svg {
@@ -30,12 +30,12 @@ export const Container = styled.div`
 export const Content = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 16px;
   flex: 1;
 `;
 
 export const DivImage = styled.div<IDivImage>`
-  background: url(${(props) => props.path}) center/cover no-repeat;
+  background: url(${(props) => props.path}) center/contain no-repeat;
+  border-radius: 4px 0 0 4px ;
 `;
 
 export const Informations = styled.div`
@@ -46,6 +46,11 @@ export const Informations = styled.div`
   max-height: 400px;
   overflow: auto;
   gap: 10px;
+
+  @media (max-width: 767px) {
+    gap: 8px;
+    padding: 12px;
+  }
 
   > div {
     display: flex;

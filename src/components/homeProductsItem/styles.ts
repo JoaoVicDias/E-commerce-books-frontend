@@ -3,11 +3,10 @@ import styled from "styled-components";
 export const Container = styled.li`
   box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
     0 0 0 1px rgb(10 10 10 / 2%);
-  border-radius: 2px;
+  border-radius: 3px;
   cursor: pointer;
 
   > img {
-    height: auto;
     width: 100%;
     border-radius: 2px 2px 0 0;
   }
@@ -20,6 +19,11 @@ export const Informations = styled.div`
     font-weight: 700;
     margin-bottom: 12px;
     color: #3273dc;
+    overflow:hidden;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 1; 
+    -webkit-box-orient: vertical;
   }
 
   > strong {

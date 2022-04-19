@@ -63,6 +63,10 @@ export const Informations = styled.div`
     font-weight: 600;
     line-height: 1.125;
     margin-bottom: 10px;
+
+    @media(max-width:767px) {
+      font-size: 1.2rem ;
+    }
   }
   > span {
     color: #fff;
@@ -70,6 +74,10 @@ export const Informations = styled.div`
     font-weight: 600;
     line-height: 1.125;
     margin: 10px 0;
+
+    @media(max-width:767px) {
+      font-size: 1rem ;
+    }
   }
 
   > div {
@@ -82,12 +90,16 @@ export const Informations = styled.div`
       border: 1px solid #fff;
       padding: 6px;
       width: 100px;
-
+      
       > span {
         color: #fff;
         font-size: 1.5rem;
         font-weight: 600;
         line-height: 1.125;
+
+        @media(max-width:767px) {
+          font-size: 1rem ;
+        }
       }
 
       > button {
