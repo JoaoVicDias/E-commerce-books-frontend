@@ -9,7 +9,7 @@ import MyProductsList from '../../components/myProductsList'
 import SettingsFilters from '../../components/settingsFilters'
 import Paginate from '../../components/paginate'
 
-import categorysHook from '../../hooks/categoryHook'
+import { useCategory } from '../../hooks/categoryHook'
 import { useForm } from '../../hooks/formReduce'
 
 import api, { getApi } from '../../services/api'
@@ -48,7 +48,7 @@ const MyProducts: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(0)
     const [totalData, setTotalData] = useState(0)
 
-    const { onFetchCategorysHandler, categorys } = categorysHook()
+    const { onFetchCategorysHandler, categorys } = useCategory()
 
     const createProduct = useForm({
         img: {

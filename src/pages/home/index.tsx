@@ -7,7 +7,7 @@ import Paginate from '../../components/paginate';
 import SettingsFilters from '../../components/settingsFilters';
 import ZoomModal from '../../components/zoomModal';
 
-import Categorys from '../../hooks/categoryHook';
+import { useCategory } from '../../hooks/categoryHook';
 
 import api from '../../services/api'
 
@@ -56,7 +56,7 @@ const Home: React.FC = () => {
     const [totalData, setTotalData] = useState(0)
     const [zoomModal, setZoomModal] = useState<IZoomModalState>({ description: '', id: '', price: 0, title: '', img: '' })
 
-    const { onFetchCategorysHandler } = Categorys()
+    const { onFetchCategorysHandler } = useCategory()
 
     const filterConfigs = useMemo(() => ([
         {

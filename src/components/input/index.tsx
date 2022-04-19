@@ -84,7 +84,7 @@ const Input: React.FC<IInputProps> = ({
                             style={{ display: 'none' }}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => onChangeInputImage(event)}
                         />
-                        <Button type="button" onClick={onClickImageButton} className="img-button" > Escolha uma imagem! </Button>
+                        <Button type="button" onClick={onClickImageButton} className="img-button" > Escolha uma imagem de perfil! </Button>
                     </>
                 )
 

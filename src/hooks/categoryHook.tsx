@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useState } from "react"
 
 import api from "../services/api"
 
@@ -7,7 +7,14 @@ interface ICategory {
     id: string;
 }
 
-export default function Categorys() {
+interface ICategoryProvider {
+    categorys: ICategory[]
+    onFetchCategorysHandler: () => void;
+}
+
+const CategoryProvider = createContext( {} as ICategoryProvider )
+
+const Categorys:React.FC = ({ children }) =>{
 
     const [categorys, setCategorys] = useState<ICategory[]>([])
 
@@ -38,8 +45,18 @@ export default function Categorys() {
         onFetchCategorys()
     }, [onFetchCategorys])
 
-    return {
-        onFetchCategorysHandler,
-        categorys
-    }
+    return (
+        <CategoryProvider.Provider  value={{
+            onFetchCategorysHandler,
+            categorys
+        }}>
+            {children}
+        </CategoryProvider.Provider>
+    )
 }
+
+export default Categorys
+
+const useCategory = () => useContext(CategoryProvider);
+
+export { useCategory }
